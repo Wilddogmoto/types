@@ -13,28 +13,27 @@ BubbleSort
 чтобы увидеть, больше ли он, если да, то вам нужно поменять их местами. Вы должны продолжать выполнять эту задачу,
 пока больше нечего будет переставлять.
 */
-func BubbleSort[E cmp.Ordered]() SortAlgorithm[E] {
-	return func(array Slice[E]) Slice[E] {
+func BubbleSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
-		var isDone bool
+	var isDone bool
 
-		for !isDone {
+	for !isDone {
 
-			isDone = true
-			i := 0
+		isDone = true
+		i := 0
 
-			for i < len(array)-1 {
-				if array[i] > array[i+1] {
-					array[i], array[i+1] = array[i+1], array[i]
-					isDone = false
-				}
-				i++
+		for i < len(array)-1 {
+			if array[i] > array[i+1] {
+				array[i], array[i+1] = array[i+1], array[i]
+				isDone = false
 			}
-
+			i++
 		}
 
-		return array
 	}
+
+	return array
+
 }
 
 /*
@@ -44,28 +43,24 @@ InsertionSort
 Каждый новый элемент сравнивается с уже отсортированными элементами, и вставляется в нужное место в последовательности.
 Этот процесс продолжается до тех пор, пока все элементы не будут отсортированы.
 */
-func InsertionSort[E cmp.Ordered]() SortAlgorithm[E] {
+func InsertionSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
-	return func(array Slice[E]) Slice[E] {
+	i := 1
 
-		i := 1
+	for i < len(array) {
 
-		for i < len(array) {
+		j := i
 
-			j := i
+		for j >= 1 && array[j] < array[j-1] {
+			array[j], array[j-1] = array[j-1], array[j]
 
-			for j >= 1 && array[j] < array[j-1] {
-				array[j], array[j-1] = array[j-1], array[j]
-
-				j--
-			}
-
-			i++
+			j--
 		}
 
-		return array
+		i++
 	}
 
+	return array
 }
 
 /*
@@ -76,19 +71,18 @@ MergeSort
 Алгоритм сортировки слиянием является эффективным и обычно используется для сортировки больших массивов.
 Время выполнения сортировки слиянием в худшем, среднем и лучшем случае составляет O(n log n), где n - количество элементов в массиве.
 */
-func MergeSort[E cmp.Ordered]() SortAlgorithm[E] {
-	return func(array Slice[E]) Slice[E] {
-		lenArray := len(array)
+func MergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
-		if lenArray == 1 {
-			return array
-		}
+	lenArray := len(array)
 
-		fp := mergeSort[E](array[0 : lenArray/2])
-		sp := mergeSort[E](array[lenArray/2:])
-
-		return merge[E](fp, sp)
+	if lenArray == 1 {
+		return array
 	}
+
+	fp := mergeSort[E](array[0 : lenArray/2])
+	sp := mergeSort[E](array[lenArray/2:])
+
+	return merge[E](fp, sp)
 }
 
 func mergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {

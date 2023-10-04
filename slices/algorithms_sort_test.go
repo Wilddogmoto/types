@@ -26,19 +26,19 @@ func TestSortInteger(t *testing.T) {
 			name:      "bubble sort",
 			add:       add,
 			want:      want,
-			algorithm: slices.BubbleSort[int](),
+			algorithm: slices.BubbleSort[int],
 		},
 		{
 			name:      "insertion sort",
 			add:       add,
 			want:      want,
-			algorithm: slices.InsertionSort[int](),
+			algorithm: slices.InsertionSort[int],
 		},
 		{
 			name:      "merge sort",
 			add:       add,
 			want:      want,
-			algorithm: slices.MergeSort[int](),
+			algorithm: slices.MergeSort[int],
 		},
 	}
 
@@ -84,19 +84,19 @@ func TestSortStringer(t *testing.T) {
 			name:      "bubble sort",
 			add:       add,
 			want:      want,
-			algorithm: slices.BubbleSort[string](),
+			algorithm: slices.BubbleSort[string],
 		},
 		{
 			name:      "insertion sort",
 			add:       add,
 			want:      want,
-			algorithm: slices.InsertionSort[string](),
+			algorithm: slices.InsertionSort[string],
 		},
 		{
 			name:      "merge sort",
 			add:       add,
 			want:      want,
-			algorithm: slices.MergeSort[string](),
+			algorithm: slices.MergeSort[string],
 		},
 	}
 
