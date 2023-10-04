@@ -4,6 +4,10 @@ import (
 	"cmp"
 )
 
-func GetPointer[T cmp.Ordered](value T) *T {
+func GetOrderedPointer[T cmp.Ordered](value T) *T {
+	return &value
+}
+
+func GetPointer[T any](value T) *T {
 	return &value
 }
