@@ -61,7 +61,7 @@ func (slice *Slice[E]) Grow(n int) {
 	}
 }
 
-// Sort if algorithm == nil used default algorithm sort.Sort (quicksort).
+// Sort if algorithm == nil used default algorithm slices.SortFunc (quicksort).
 // Внимание русские символы по типу `Ё` могут не проходить сортировку
 func (slice *Slice[E]) Sort(algorithm SortAlgorithm[E]) {
 	if algorithm != nil {
@@ -69,9 +69,11 @@ func (slice *Slice[E]) Sort(algorithm SortAlgorithm[E]) {
 		return
 	}
 
-	slices.SortFunc(*slice, func(a, b E) int {
-		return cmp.Compare(a, b)
-	})
+	*slice = AnySort[E](func(a, b E) int { return cmp.Compare(a, b) })(*slice)
+
+	//slices.SortFunc(*slice, func(a, b E) int {
+	//	return cmp.Compare(a, b)
+	//})
 }
 
 func (slice Slice[E]) Len() int { return len(slice) }

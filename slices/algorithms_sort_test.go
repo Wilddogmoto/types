@@ -1,6 +1,7 @@
 package slices_test
 
 import (
+	"cmp"
 	"github.com/Wilddogmoto/types/slices"
 	"testing"
 )
@@ -45,6 +46,14 @@ func TestSortInteger(t *testing.T) {
 			add:       add,
 			want:      want,
 			algorithm: slices.QuickSort[int],
+		},
+		{
+			name: "any sort",
+			add:  add,
+			want: want,
+			algorithm: slices.AnySort[int](func(a, b int) int {
+				return cmp.Compare(a, b)
+			}),
 		},
 	}
 
@@ -109,6 +118,14 @@ func TestSortStringer(t *testing.T) {
 			add:       add,
 			want:      want,
 			algorithm: slices.QuickSort[string],
+		},
+		{
+			name: "any sort",
+			add:  add,
+			want: want,
+			algorithm: slices.AnySort[string](func(a, b string) int {
+				return cmp.Compare(a, b)
+			}),
 		},
 	}
 

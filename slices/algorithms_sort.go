@@ -2,22 +2,33 @@ package slices
 
 import (
 	"cmp"
+	"slices"
 )
 
 type SortAlgorithm[E cmp.Ordered] func(arr Slice[E]) Slice[E]
 
+func AnySort[E cmp.Ordered](compare func(a E, b E) int) SortAlgorithm[E] {
+
+	return func(slice Slice[E]) Slice[E] {
+
+		slices.SortFunc(slice, compare)
+
+		return slice
+	}
+}
+
 func QuickSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
-	if array.Len() < 2 {
+	lenArray := array.Len()
+
+	if lenArray < 2 {
 		return array
 	}
 
 	pivot := array.Get(0)
 
-	var (
-		less    Slice[E]
-		greater Slice[E]
-	)
+	less := MakeSlice[E](0, lenArray)
+	greater := MakeSlice[E](0, lenArray)
 
 	for _, element := range array[1:] {
 
@@ -28,8 +39,14 @@ func QuickSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 		}
 	}
 
-	out := append(QuickSort(less), pivot)
-	out = append(out, QuickSort(greater)...)
+	lessSlice := QuickSort(less)
+	greaterSlice := QuickSort(greater)
+
+	out := MakeSlice[E](0, lessSlice.Len()+greaterSlice.Len())
+
+	out.Append(lessSlice...)
+	out.Append(pivot)
+	out.Append(greaterSlice...)
 
 	return out
 }
@@ -101,7 +118,7 @@ MergeSort
 */
 func MergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
-	lenArray := len(array)
+	lenArray := array.Len()
 
 	if lenArray == 1 {
 		return array
@@ -115,7 +132,7 @@ func MergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
 func mergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
-	lenArray := len(array)
+	lenArray := array.Len()
 
 	if lenArray == 1 {
 		return array
@@ -129,13 +146,17 @@ func mergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 
 func merge[E cmp.Ordered](fp, sp Slice[E]) Slice[E] {
 
-	out := make(Slice[E], len(fp)+len(sp))
+	//out := make(Slice[E], len(fp)+len(sp))
+
+	lc := fp.Len() + sp.Len()
+
+	out := MakeSlice[E](lc, lc)
 
 	fpIndex := 0
 	spIndex := 0
 	nIndex := 0
 
-	for fpIndex < len(fp) && spIndex < len(sp) {
+	for fpIndex < fp.Len() && spIndex < sp.Len() {
 		if fp[fpIndex] < sp[spIndex] {
 			out[nIndex] = fp[fpIndex]
 			fpIndex++
@@ -150,14 +171,14 @@ func merge[E cmp.Ordered](fp, sp Slice[E]) Slice[E] {
 		nIndex++
 	}
 
-	for fpIndex < len(fp) {
+	for fpIndex < fp.Len() {
 		out[nIndex] = fp[fpIndex]
 
 		fpIndex++
 		nIndex++
 	}
 
-	for spIndex < len(sp) {
+	for spIndex < sp.Len() {
 		out[nIndex] = sp[spIndex]
 
 		spIndex++
