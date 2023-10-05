@@ -40,6 +40,12 @@ func TestSortInteger(t *testing.T) {
 			want:      want,
 			algorithm: slices.MergeSort[int],
 		},
+		{
+			name:      "quick sort",
+			add:       add,
+			want:      want,
+			algorithm: slices.QuickSort[int],
+		},
 	}
 
 	slice := slices.MakeSlice[int](0, 0)
@@ -97,6 +103,12 @@ func TestSortStringer(t *testing.T) {
 			add:       add,
 			want:      want,
 			algorithm: slices.MergeSort[string],
+		},
+		{
+			name:      "quick sort",
+			add:       add,
+			want:      want,
+			algorithm: slices.QuickSort[string],
 		},
 	}
 

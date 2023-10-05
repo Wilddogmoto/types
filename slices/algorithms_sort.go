@@ -6,6 +6,34 @@ import (
 
 type SortAlgorithm[E cmp.Ordered] func(arr Slice[E]) Slice[E]
 
+func QuickSort[E cmp.Ordered](array Slice[E]) Slice[E] {
+
+	if array.Len() < 2 {
+		return array
+	}
+
+	pivot := array.Get(0)
+
+	var (
+		less    Slice[E]
+		greater Slice[E]
+	)
+
+	for _, element := range array[1:] {
+
+		if element <= pivot {
+			less.Append(element)
+		} else {
+			greater.Append(element)
+		}
+	}
+
+	out := append(QuickSort(less), pivot)
+	out = append(out, QuickSort(greater)...)
+
+	return out
+}
+
 /*
 BubbleSort
 Сортировка "Пузырьком"
