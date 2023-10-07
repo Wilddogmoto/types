@@ -2,14 +2,26 @@ package slices_test
 
 import (
 	"cmp"
+	"fmt"
 	"github.com/Wilddogmoto/types/slices"
 	"testing"
 )
 
+func ExampleBubbleSort() {
+
+	slice := slices.MakeSlice[int](0, 3)
+	slice.Append(3, 2, 1)
+
+	slice.Sort(slices.BubbleSort[int])
+
+	fmt.Print(slice)
+	// Output: [1 2 3]
+}
+
 func TestSortInteger(t *testing.T) {
 
-	add := []int{3, 2, 33, 100, 1, 0, 0, 0}
-	want := []int{0, 0, 0, 1, 2, 3, 33, 100}
+	add := []int{3, 2, 33, 33, 100, 1, 0, 0, 0}
+	want := []int{0, 0, 0, 1, 2, 3, 33, 33, 100}
 
 	tests := []struct {
 		name      string
@@ -55,6 +67,12 @@ func TestSortInteger(t *testing.T) {
 				return cmp.Compare(a, b)
 			}),
 		},
+		{
+			name:      "heap sort",
+			add:       add,
+			want:      want,
+			algorithm: slices.HeapSort[int],
+		},
 	}
 
 	slice := slices.MakeSlice[int](0, 0)
@@ -70,7 +88,7 @@ func TestSortInteger(t *testing.T) {
 			for index, val := range slice {
 
 				if tt.want[index] != val {
-					t.Errorf("Sort func = got %v, want %v", val, tt.want[index])
+					t.Errorf("Sort func = got %v, want %v", slice, tt.want[index])
 				}
 
 			}
@@ -126,6 +144,12 @@ func TestSortStringer(t *testing.T) {
 			algorithm: slices.AnySort[string](func(a, b string) int {
 				return cmp.Compare(a, b)
 			}),
+		},
+		{
+			name:      "heap sort",
+			add:       add,
+			want:      want,
+			algorithm: slices.HeapSort[string],
 		},
 	}
 

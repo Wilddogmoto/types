@@ -70,10 +70,6 @@ func (slice *Slice[E]) Sort(algorithm SortAlgorithm[E]) {
 	}
 
 	*slice = AnySort[E](func(a, b E) int { return cmp.Compare(a, b) })(*slice)
-
-	//slices.SortFunc(*slice, func(a, b E) int {
-	//	return cmp.Compare(a, b)
-	//})
 }
 
 func (slice Slice[E]) Len() int { return len(slice) }

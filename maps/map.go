@@ -45,13 +45,12 @@ func (m Map[Key, Val]) Len() int {
 
 func (m Map[Key, Val]) Copy() Map[Key, Val] {
 	newMap := make(Map[Key, Val], m.Len())
-	maps.Copy(newMap, m)
+	maps.Copy(newMap, m) // try maps.Clone()  ...Benchmark...
 	return newMap
 }
 
-func (m *Map[Key, Val]) Clear() {
-	//maps.Clear(m) - if there is a large map, it will take a long time to clean up
-	*m = make(Map[Key, Val], m.Len())
+func (m Map[Key, Val]) Clear() {
+	clear(m)
 }
 
 func (m Map[Key, Val]) Values() []Val {

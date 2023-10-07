@@ -2,12 +2,16 @@ package types
 
 type (
 	BaseTypes interface {
-		IntegerTypes | FloatingTypes | SymbolsTypes | CharactersTypes | BinaryTypes
+		IntegerTypes | FloatingTypes | SymbolsTypes | PointerTypes
 	}
 
 	IntegerTypes interface {
 		~int | ~int8 | ~int16 | ~int32 | ~int64 |
-			~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+			~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+	}
+
+	PointerTypes interface {
+		~uintptr
 	}
 
 	FloatingTypes interface {
@@ -16,13 +20,5 @@ type (
 
 	SymbolsTypes interface {
 		~string
-	}
-
-	CharactersTypes interface {
-		~rune
-	}
-
-	BinaryTypes interface {
-		~byte
 	}
 )

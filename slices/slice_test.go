@@ -1,11 +1,21 @@
 package slices_test
 
 import (
+	"fmt"
 	"github.com/Wilddogmoto/types/slices"
 	"reflect"
 	"sync"
 	"testing"
 )
+
+func ExampleMakeSlice() {
+
+	slice := slices.MakeSlice[int](0, 3)
+	slice.Append(1, 2, 3)
+
+	fmt.Print(slice)
+	// Output: [1 2 3]
+}
 
 func TestSlice_Remove(t *testing.T) {
 

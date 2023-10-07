@@ -7,8 +7,10 @@ import (
 
 type SortAlgorithm[E cmp.Ordered] func(arr Slice[E]) Slice[E]
 
+//	AnySort slices.SortFunc(*slice, func(a, b E) int {
+//		return cmp.Compare(a, b)
+//	})
 func AnySort[E cmp.Ordered](compare func(a E, b E) int) SortAlgorithm[E] {
-
 	return func(slice Slice[E]) Slice[E] {
 
 		slices.SortFunc(slice, compare)
@@ -17,38 +19,79 @@ func AnySort[E cmp.Ordered](compare func(a E, b E) int) SortAlgorithm[E] {
 	}
 }
 
-func QuickSort[E cmp.Ordered](array Slice[E]) Slice[E] {
+func HeapSort[E cmp.Ordered](slice Slice[E]) Slice[E] {
 
-	lenArray := array.Len()
+	i := 0
+	var tmp E
 
-	if lenArray < 2 {
-		return array
+	for i = slice.Len()/2 - 1; i >= 0; i-- {
+		slice = heapSort(slice, i, len(slice))
 	}
 
-	pivot := array.Get(0)
+	for i = slice.Len() - 1; i >= 1; i-- {
+		tmp = slice[0]
+		slice[0] = slice[i]
+		slice[i] = tmp
+		slice = heapSort(slice, 0, i)
+	}
 
-	less := MakeSlice[E](0, lenArray)
-	greater := MakeSlice[E](0, lenArray)
+	return slice
+}
 
-	for _, element := range array[1:] {
+func heapSort[E cmp.Ordered](slice Slice[E], i int, sLen int) Slice[E] {
+	done := false
 
-		if element <= pivot {
-			less.Append(element)
+	var tmp E
+	maxChild := 0
+
+	for (i*2+1 < sLen) && (!done) {
+		if i*2+1 == sLen-1 {
+			maxChild = i*2 + 1
+		} else if slice[i*2+1] > slice[i*2+2] {
+			maxChild = i*2 + 1
 		} else {
-			greater.Append(element)
+			maxChild = i*2 + 2
+		}
+
+		if slice[i] < slice[maxChild] {
+			tmp = slice[i]
+			slice[i] = slice[maxChild]
+			slice[maxChild] = tmp
+			i = maxChild
+		} else {
+			done = true
 		}
 	}
 
-	lessSlice := QuickSort(less)
-	greaterSlice := QuickSort(greater)
+	return slice
+}
 
-	out := MakeSlice[E](0, lessSlice.Len()+greaterSlice.Len())
+func QuickSort[E cmp.Ordered](slice Slice[E]) Slice[E] {
+	return quickSort[E](slice, 0, len(slice)-1)
+}
 
-	out.Append(lessSlice...)
-	out.Append(pivot)
-	out.Append(greaterSlice...)
+func quickSort[E cmp.Ordered](slice Slice[E], left int, right int) Slice[E] {
+	if left >= right {
+		return slice
+	}
 
-	return out
+	pivot := slice[left]
+	i := left + 1
+
+	for j := left; j <= right; j++ {
+		if pivot > slice[j] {
+			slice[i], slice[j] = slice[j], slice[i]
+			i++
+		}
+
+	}
+
+	slice[left], slice[i-1] = slice[i-1], slice[left]
+
+	quickSort(slice, left, i-2)
+	quickSort(slice, i, right)
+
+	return slice
 }
 
 /*
@@ -117,17 +160,7 @@ MergeSort
 Время выполнения сортировки слиянием в худшем, среднем и лучшем случае составляет O(n log n), где n - количество элементов в массиве.
 */
 func MergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
-
-	lenArray := array.Len()
-
-	if lenArray == 1 {
-		return array
-	}
-
-	fp := mergeSort[E](array[0 : lenArray/2])
-	sp := mergeSort[E](array[lenArray/2:])
-
-	return merge[E](fp, sp)
+	return mergeSort[E](array)
 }
 
 func mergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
@@ -145,8 +178,6 @@ func mergeSort[E cmp.Ordered](array Slice[E]) Slice[E] {
 }
 
 func merge[E cmp.Ordered](fp, sp Slice[E]) Slice[E] {
-
-	//out := make(Slice[E], len(fp)+len(sp))
 
 	lc := fp.Len() + sp.Len()
 
